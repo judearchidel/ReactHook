@@ -1,5 +1,14 @@
 import { useCallback, useReducer } from "react"
 
+
+const intialstate =  {
+    loading: false, 
+    error: null,
+    data: null,
+    extra: null,
+    identifier: null
+    }
+
 const httpreducer = (prevhttpstate,action)=>{
     switch(action.type){
       case 'SEND':
@@ -31,6 +40,8 @@ const httpreducer = (prevhttpstate,action)=>{
           ...prevhttpstate,
           error: null
         }
+      case 'CLEAR':
+          return intialstate
       default:
         throw new Error('should not reach here');    
     }
@@ -38,13 +49,9 @@ const httpreducer = (prevhttpstate,action)=>{
 
 const useHttp =()=>{
     const [httpstate, dispatchHttp]= useReducer(httpreducer,
-        {
-        loading: false, 
-        error: null,
-        data: null,
-        extra: null,
-        identifier: null
-        })
+        intialstate)
+
+    const clear = useCallback(()=>{dispatchHttp({type: 'CLEAR'})},[]);    
 
     const senddata = useCallback((url,method,body,extra,identifier)=>{
         dispatchHttp({type: 'SEND'})
@@ -79,7 +86,8 @@ const useHttp =()=>{
         error: httpstate.error,
         senddata: senddata,
         reqextra: httpstate.extra,
-        identifier: httpstate.identifier
+        identifier: httpstate.identifier,
+        clear: clear
     };
 };
 

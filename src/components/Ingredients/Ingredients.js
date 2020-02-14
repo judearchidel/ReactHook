@@ -50,7 +50,7 @@ const httpreducer = (prevhttpstate,action)=>{
 
 const Ingredients=() =>  {
  const [userIngredients,dispatch] = useReducer(ingredientreducer,[]);
- const {isloading,error,data,senddata,reqextra,identifier} = useHttp();
+ const {isloading,error,data,senddata,reqextra,identifier,clear} = useHttp();
 
  //const [httpstate, dispatchHttp]= useReducer(httpreducer,{loading: false, error: null})
  //const [userIngredients, setUserIngredients] = useState([]);
@@ -63,7 +63,7 @@ useEffect(()=>{
   id: reqextra})
   }
   else if(identifier === 'add')
-  {console.log(data)
+  {
     dispatch({
       type: 'ADD',
       ingredients: {
@@ -116,7 +116,6 @@ const addIngredients = useCallback(ingrdients => {
 }, [senddata]);
 
 const removeIngredients = useCallback((id) => {
-  
   senddata(`https://reacthook-cb5b7.firebaseio.com/ingredients/${id}.json`,'DELETE',null,id,'remove')
   //setisloadng(true);
  /* dispatchHttp({
@@ -154,21 +153,21 @@ const filteringDataHandler = useCallback((loadedData)=>{
 })
 },[])
 
-const closeErrormodal = useCallback(()=>{
+//const closeErrormodal = useCallback(()=>{
   //dispatchHttp({
   //  type: 'REMOVE_ERROR'
  // })
   
-});
+//})
+;
 const ings = useMemo(()=>{
   return(
     <IngredientList ingredients={userIngredients}  onRemoveItem={removeIngredients}/>
   )
 },[userIngredients,removeIngredients])
-
   return (
     <div className="App">
-    {error && <ErrorHandler onClose={closeErrormodal}>{error}</ErrorHandler>}
+    {error && <ErrorHandler onClose={clear}>{error}</ErrorHandler>}
       <IngredientForm onaddIngredients={addIngredients} loading={isloading}/>
 
       <section>
